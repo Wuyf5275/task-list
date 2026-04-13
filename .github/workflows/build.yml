@@ -32,11 +32,15 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: npm install --no-fund --no-audit
+        run: |
+          npm install --no-fund --no-audit
+          echo "--- Checking critical binaries ---"
+          npx vite --version
+          node -e "try { require('esbuild'); console.log('esbuild: OK') } catch(e) { console.log('esbuild: MISSING -', e.message) }"
 
       - name: Build Vite + TypeScript
         shell: bash
-        run: npx vite build
+        run: npx vite build 2>&1 || { echo "::error::Vite build failed. Debug info:"; ls -la node_modules/.bin/ | grep -E 'vite|esbuild|rollup' || true; node -e "console.log(process.arch, process.platform)"; exit 1; }
 
       - name: Package with electron-builder
         shell: bash

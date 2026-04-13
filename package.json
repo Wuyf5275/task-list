@@ -17,6 +17,7 @@
     "appId": "com.wuyf.today-tasks",
     "productName": "今日事今日毕",
     "icon": "build/icon.png",
+    "artifactName": "${name}-${version}-${arch}.${ext}",
     "directories": {
       "output": "release"
     },

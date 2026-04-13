@@ -29,10 +29,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Clean install dependencies
+        run: |
+          rm -f package-lock.json
+          npm install
+          npm rebuild
+        shell: bash
 
       - name: Build Vite + TypeScript
         run: |
@@ -41,9 +44,17 @@ jobs:
 
       - name: Package with electron-builder
         shell: bash
-        run: npx electron-builder --${{ matrix.platform == 'win' && 'win' || matrix.platform == 'mac' && 'mac' || 'linux' }}
+        run: |
+          if [ "${{ matrix.platform }}" = "win" ]; then
+            npx electron-builder --win
+          elif [ "${{ matrix.platform }}" = "mac" ]; then
+            npx electron-builder --mac
+          else
+            npx electron-builder --linux
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -55,5 +66,4 @@ jobs:
             release/*.zip
             release/*.AppImage
             release/*.deb
-            release/*.snap
           if-no-files-found: ignore

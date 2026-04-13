@@ -28,19 +28,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install dependencies
         shell: bash
         run: |
+          rm -f package-lock.json
           npm install --no-fund --no-audit
-          echo "--- Checking critical binaries ---"
-          npx vite --version
-          node -e "try { require('esbuild'); console.log('esbuild: OK') } catch(e) { console.log('esbuild: MISSING -', e.message) }"
 
       - name: Build Vite + TypeScript
         shell: bash
-        run: npx vite build 2>&1 || { echo "::error::Vite build failed. Debug info:"; ls -la node_modules/.bin/ | grep -E 'vite|esbuild|rollup' || true; node -e "console.log(process.arch, process.platform)"; exit 1; }
+        run: npx vite build
 
       - name: Package with electron-builder
         shell: bash

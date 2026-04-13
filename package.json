@@ -27,6 +27,9 @@
       "target": ["dmg", "zip"],
       "category": "public.app-category.productivity"
     },
+    "linux": {
+      "target": ["AppImage"]
+    },
     "nsis": {
       "shortcutName": "今日事今日毕"
     }

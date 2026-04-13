@@ -24,6 +24,8 @@ let win: BrowserWindow | null
 
 function createWindow() {
   win = new BrowserWindow({
+    title: '今日事今日毕',
+    icon: path.join(process.env.APP_ROOT, 'build', 'icon.png'),
     width: 340,
     height: 560,
     frame: false,

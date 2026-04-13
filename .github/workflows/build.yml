@@ -30,11 +30,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Clean install dependencies
-        run: |
-          rm -f package-lock.json
-          npm install
-          npm rebuild
+      - name: Install dependencies
+        run: npm ci
         shell: bash
 
       - name: Build Vite + TypeScript

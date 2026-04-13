@@ -19,8 +19,6 @@ jobs:
             platform: win
           - os: macos-latest
             platform: mac
-          - os: ubuntu-latest
-            platform: linux
 
     runs-on: ${{ matrix.os }}
 
@@ -59,5 +57,4 @@ jobs:
             release/*.dmg
             release/*.zip
             release/*.AppImage
-            release/*.deb
           if-no-files-found: ignore

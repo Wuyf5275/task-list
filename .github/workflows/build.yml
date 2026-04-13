@@ -3,12 +3,13 @@ name: Build & Release
 on:
   push:
     tags:
-      - 'v*'  # 推送 v 开头的 tag 时触发，如 v1.0.0
-  workflow_dispatch:  # 也可以在 GitHub 页面手动触发
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: windows-latest
@@ -27,11 +28,35 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
+
+      # macOS 需要将 png 转成 icns 格式
+      - name: Convert icon for macOS
+        if: matrix.platform == 'mac'
+        run: |
+          mkdir -p build/icon.iconset
+          sips -z 16 16     build/icon.png --out build/icon.iconset/icon_16x16.png
+          sips -z 32 32     build/icon.png --out build/icon.iconset/icon_16x16@2x.png
+          sips -z 32 32     build/icon.png --out build/icon.iconset/icon_32x32.png
+          sips -z 64 64     build/icon.png --out build/icon.iconset/icon_32x32@2x.png
+          sips -z 128 128   build/icon.png --out build/icon.iconset/icon_128x128.png
+          sips -z 256 256   build/icon.png --out build/icon.iconset/icon_128x128@2x.png
+          sips -z 256 256   build/icon.png --out build/icon.iconset/icon_256x256.png
+          sips -z 512 512   build/icon.png --out build/icon.iconset/icon_256x256@2x.png
+          sips -z 512 512   build/icon.png --out build/icon.iconset/icon_512x512.png
+          sips -z 1024 1024 build/icon.png --out build/icon.iconset/icon_512x512@2x.png
+          iconutil -c icns build/icon.iconset -o build/icon.icns
+
+      # Windows 需要将 png 转成 ico 格式
+      - name: Convert icon for Windows
+        if: matrix.platform == 'win'
+        run: |
+          npm install --no-save png-to-ico
+          node -e "const pngToIco = require('png-to-ico'); const fs = require('fs'); pngToIco('build/icon.png').then(buf => fs.writeFileSync('build/icon.ico', buf));"
 
       - name: Build & Package
         run: npm run build

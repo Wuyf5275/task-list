@@ -35,9 +35,7 @@ jobs:
         shell: bash
 
       - name: Build Vite + TypeScript
-        run: |
-          npx tsc
-          npx vite build
+        run: npx vite build
 
       - name: Package with electron-builder
         shell: bash

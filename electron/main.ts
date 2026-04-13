@@ -15,17 +15,17 @@ process.env.APP_ROOT = path.join(__dirname, '..')
 // │ │ └── preload.js
 // │
 export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
-export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
-export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
+export const MAIN_DIST = path.join(process.env.APP_ROOT!, 'dist-electron')
+export const RENDERER_DIST = path.join(process.env.APP_ROOT!, 'dist')
 
-process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
+process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT!, 'public') : RENDERER_DIST
 
 let win: BrowserWindow | null
 
 function createWindow() {
   win = new BrowserWindow({
     title: '今日事今日毕',
-    icon: path.join(process.env.APP_ROOT, 'build', 'icon.png'),
+    icon: path.join(process.env.APP_ROOT!, 'build', 'icon.png'),
     width: 340,
     height: 560,
     frame: false,
